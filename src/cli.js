@@ -56,10 +56,10 @@ module.exports = argv => {
     process.exit(1);
   });
 
-  function checkRequiredOptions(options) {
+  function checkRequiredOptions(options, data) {
     Object.values(options.options).forEach(option => {
       const name = option.long.slice(2);
-      if (option.required && !options.hasOwnProperty(name)) {
+      if (option.required && !options.hasOwnProperty(name) && data[name] === 'unknown') {
         handleError(`option '${option.flags}' missing`);
       }
     });
@@ -75,6 +75,7 @@ module.exports = argv => {
     .option('--ciEnvUrl <ciEnvUrl>', 'CI environment URL')
     .option('--ciProjectUrl <ciEnvUrl>', 'CI project URL')
     .option('--ciPipelineId <ciPipelineId>', 'CI pipeline ID')
+    .option('--jiraBaseUrl [jiraBaseUrl]', 'JIRA base URL')
     .option('--from [from]', 'Notification sender name')
     .option('--color [color]', 'Notification color [yellow, green, red, purple, gray, random]')
     .option('--format [format]', 'Notification format [text|html]')
@@ -85,31 +86,31 @@ module.exports = argv => {
     )
     .option('--template [template]', 'Path to notification template literal')
     .action(async options => {
-      checkRequiredOptions(options);
-
       const data = Object.assign(
         {
-          jiraBaseUrl: 'https://jira.sim-technik.de/issues/?jql=$JIRA_QUERY%20AND%20fixVersion%3D',
-          appName: 'unknown',
-          jiraFixVersion: 'unknown',
-          label: 'unknown',
-          ciEnvUrl: 'unknown',
-          ciEnvName: 'unknown',
-          ciProjectUrl: 'unknown',
-          ciPipelineId: 'unknown',
+          jiraBaseUrl: process.env.JIRA_BASE_URL || 'https://jira.sim-technik.de/issues/?jql=$JIRA_QUERY%20AND%20fixVersion%3D',
+          appName: process.env.APPLICATION_NAME || 'unknown',
+          jiraFixVersion: process.env.APPLICATION_VERSION || 'unknown',
+          label: process.env.ELASTIC_BEANSTALK_LABEL || 'unknown',
+          ciEnvUrl: process.env.CI_ENVIRONMENT_URL || 'unknown',
+          ciEnvName: process.env.CI_ENVIRONMENT_NAME || 'unknown',
+          ciProjectUrl: process.env.CI_PROJECT_URL || 'unknown',
+          ciPipelineId: process.env.CI_PIPELINE_ID || 'unknown',
         },
         options
       );
+
+      checkRequiredOptions(options, data);
 
       const headers = {
         Authorization: `Bearer ${options.hipChatToken || process.env.HIPCHAT_TOKEN}`,
       };
 
       const body = {
-        from: options.from || 'GitLab CI',
-        color: options.color || 'purple',
-        message_format: options.format || 'html',
-        notify: !options.silent,
+        from: options.from || process.env.HIPCHAT_FROM || 'GitLab CI',
+        color: options.color || process.env.HIPCHAT_COLOR || 'purple',
+        message_format: options.format || process.env.HIPCHAT_FORMAT || 'html',
+        notify: !process.env.HIPCHAT_SILENT && !options.silent,
         message: getTemplate(options.template, data),
       };
 
