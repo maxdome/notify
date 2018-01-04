@@ -1,0 +1,35 @@
+{
+  "name": "@maxdome/notify",
+  "version": "0.0.0",
+  "description": "Send CD / CI notifications",
+  "main": "src/cli.js",
+  "scripts": {
+    "fmt": "maxdome-prettier"
+  },
+  "bin": {
+    "notify": "bin/notify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxdome/notify.git"
+  },
+  "author": "Chris Neuhäuser <chris@type10.com> (http://type10.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxdome/notify/issues"
+  },
+  "homepage": "https://github.com/maxdome/notify#readme",
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "commander": "^2.12.2",
+    "got": "^8.0.1"
+  },
+  "devDependencies": {
+    "@maxdome/prettier": "^1.3.2"
+  }
+}

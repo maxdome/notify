@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+process.title = 'notify';
+require('../src/cli')(process.argv);
