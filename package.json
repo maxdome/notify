@@ -1,6 +1,6 @@
 {
   "name": "@maxdome/notify",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Send CD / CI notifications",
   "main": "src/cli.js",
   "scripts": {
