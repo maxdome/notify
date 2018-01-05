@@ -125,7 +125,7 @@ module.exports = argv => {
       };
 
       try {
-        await console.log(`https://api.hipchat.com/v2/room/${options.roomId || 'Public%20Deployments'}/notification`, {
+        await got.post(`https://api.hipchat.com/v2/room/${options.roomId || 'Public%20Deployments'}/notification`, {
           json: true,
           body,
           headers,
