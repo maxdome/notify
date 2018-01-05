@@ -68,29 +68,29 @@ module.exports = argv => {
   program
     .command('hipchat')
     .description('Send HipChat notification')
-    .option('--appName <appName>', 'Application name')
-    .option('--jiraFixVersion <jiraFixVersion>', 'JIRA fix version')
-    .option('--label <label>', 'Elastic Beanstalk label')
-    .option('--ciEnvName <ciEnvName>', 'CI environment name')
-    .option('--ciEnvUrl <ciEnvUrl>', 'CI environment URL')
-    .option('--ciProjectUrl <ciEnvUrl>', 'CI project URL')
-    .option('--ciPipelineId <ciPipelineId>', 'CI pipeline ID')
-    .option('--jiraBaseUrl [jiraBaseUrl]', 'JIRA base URL')
-    .option('--from [from]', 'Notification sender name')
-    .option('--color [color]', 'Notification color [yellow, green, red, purple, gray, random]')
-    .option('--format [format]', 'Notification format [text|html]')
-    .option('--silent', 'Disable notification alert')
+    .option('--appName <appName>', 'Application name. Default: $CI_PROJECT_NAME, $APPLICATION_NAME')
+    .option('--label <label>', 'Elastic Beanstalk label. Default: $ELASTIC_BEANSTALK_LABEL')
+    .option('--ciEnvName <ciEnvName>', 'CI environment name. Default: $CI_ENVIRONMENT_NAME')
+    .option('--ciEnvUrl <ciEnvUrl>', 'CI environment URL. Default: $CI_ENVIRONMENT_URL')
+    .option('--ciProjectUrl <ciEnvUrl>', 'CI project URL. Default: $CI_PROJECT_URL')
+    .option('--ciPipelineId <ciPipelineId>', 'CI pipeline ID. Default: $CI_PIPELINE_ID')
+    .option('--jiraFixVersion <jiraFixVersion>', 'JIRA fix version. Default: $APPLICATION_VERSION')
+    .option('--jiraQuery <jiraQuery>', 'JIRA query for project. Default: $JIRA_QUERY')
+    .option('--jiraBaseUrl [jiraBaseUrl]', 'JIRA base URL. Default: $JIRA_BASE_URL')
+    .option('--from [from]', 'Notification sender name. Default: "GitLab CI"')
+    .option('--color [color]', 'Notification color [yellow|green|red|purple|gray|random]. Default: "purple"')
+    .option('--format [format]', 'Notification format [text|html]. Default: "html"')
+    .option('--silent', 'Disable notification alert. Default: false')
     .option(
       '--hipChatToken [hipChatToken]',
-      'HipChat bearer token. Prefer HIPCHAT_TOKEN env variable over this option!'
+      'HipChat bearer token. Default: $HIPCHAT_AUTH_TOKEN'
     )
     .option('--template [template]', 'Path to notification template literal')
     .action(async options => {
       const data = Object.assign(
         {
-          jiraBaseUrl: process.env.JIRA_BASE_URL || 'https://jira.sim-technik.de/issues/?jql=$JIRA_QUERY%20AND%20fixVersion%3D',
-          appName: process.env.APPLICATION_NAME || 'unknown',
-          jiraFixVersion: process.env.APPLICATION_VERSION || 'unknown',
+          jiraBaseUrl: process.env.JIRA_BASE_URL || 'https://jira.sim-technik.de/issues/?jql={jiraQuery}%20AND%20fixVersion%3D{jiraFixVersion}',
+          appName: process.env.CI_PROJECT_NAME || process.env.APPLICATION_NAME || 'unknown',
           label: process.env.ELASTIC_BEANSTALK_LABEL || 'unknown',
           ciEnvUrl: process.env.CI_ENVIRONMENT_URL || 'unknown',
           ciEnvName: process.env.CI_ENVIRONMENT_NAME || 'unknown',
@@ -99,11 +99,14 @@ module.exports = argv => {
         },
         options
       );
+      data.jiraUrl = data.jiraBaseUrl
+        .replace(/\{jiraQuery\}/g, options.jiraQuery || process.env.JIRA_QUERY)
+        .replace(/\{jiraFixVersion\}/g, options.jiraFixVersion || process.env.APPLICATION_VERSION);
 
       checkRequiredOptions(options, data);
 
       const headers = {
-        Authorization: `Bearer ${options.hipChatToken || process.env.HIPCHAT_TOKEN}`,
+        Authorization: `Bearer ${options.hipChatToken || process.env.HIPCHAT_AUTH_TOKEN}`,
       };
 
       const body = {
