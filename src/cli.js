@@ -74,6 +74,10 @@ module.exports = argv => {
     .option('--ciEnvUrl <ciEnvUrl>', 'CI environment URL. Default: $CI_ENVIRONMENT_URL')
     .option('--ciProjectUrl <ciEnvUrl>', 'CI project URL. Default: $CI_PROJECT_URL')
     .option('--ciPipelineId <ciPipelineId>', 'CI pipeline ID. Default: $CI_PIPELINE_ID')
+    .option(
+      '--jiraFixVersionOperator <jiraFixVersionOperator>',
+      'JIRA fix version operator. Default: $JIRA_FIX_VERSION_OPERATOR'
+    )
     .option('--jiraFixVersion <jiraFixVersion>', 'JIRA fix version. Default: $APPLICATION_VERSION')
     .option('--jiraQuery <jiraQuery>', 'JIRA query for project. Default: $JIRA_QUERY')
     .option('--jiraBaseUrl [jiraBaseUrl]', 'JIRA base URL. Default: $JIRA_BASE_URL')
@@ -81,15 +85,14 @@ module.exports = argv => {
     .option('--color [color]', 'Notification color [yellow|green|red|purple|gray|random]. Default: "purple"')
     .option('--format [format]', 'Notification format [text|html]. Default: "html"')
     .option('--silent', 'Disable notification alert. Default: false')
-    .option(
-      '--hipChatToken [hipChatToken]',
-      'HipChat bearer token. Default: $HIPCHAT_AUTH_TOKEN'
-    )
+    .option('--hipChatToken [hipChatToken]', 'HipChat bearer token. Default: $HIPCHAT_AUTH_TOKEN')
     .option('--template [template]', 'Path to notification template literal')
     .action(async options => {
       const data = Object.assign(
         {
-          jiraBaseUrl: process.env.JIRA_BASE_URL || 'https://jira.sim-technik.de/issues/?jql={jiraQuery}%20AND%20fixVersion%3D{jiraFixVersion}',
+          jiraBaseUrl:
+            process.env.JIRA_BASE_URL ||
+            'https://jira.sim-technik.de/issues/?jql={jiraQuery}%20AND%20fixVersion{jiraFixVersionOperator}{jiraFixVersion}',
           appName: process.env.CI_PROJECT_NAME || process.env.APPLICATION_NAME || 'unknown',
           label: process.env.ELASTIC_BEANSTALK_LABEL || 'unknown',
           ciEnvUrl: process.env.CI_ENVIRONMENT_URL || 'unknown',
@@ -101,6 +104,10 @@ module.exports = argv => {
       );
       data.jiraUrl = data.jiraBaseUrl
         .replace(/\{jiraQuery\}/g, options.jiraQuery || process.env.JIRA_QUERY)
+        .replace(
+          /\{jiraFixVersionOperator\}/g,
+          options.jiraFixVersionOperator || process.env.JIRA_FIX_VERSION_OPERATOR || '%3D'
+        )
         .replace(/\{jiraFixVersion\}/g, options.jiraFixVersion || process.env.APPLICATION_VERSION);
 
       checkRequiredOptions(options, data);
@@ -118,7 +125,7 @@ module.exports = argv => {
       };
 
       try {
-        await got.post(`https://api.hipchat.com/v2/room/${options.roomId || 'Public%20Deployments'}/notification`, {
+        await console.log(`https://api.hipchat.com/v2/room/${options.roomId || 'Public%20Deployments'}/notification`, {
           json: true,
           body,
           headers,
