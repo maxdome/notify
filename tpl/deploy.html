@@ -1,4 +1,21 @@
-<a href="${this.ciProjectUrl}"><strong>${this.appName}</strong></a>
-<a href="${this.jiraUrl}">${this.label}</a> deployed successfully to
-<a href="${this.ciEnvUrl}"><strong>${this.ciEnvName}</strong></a> •
-<a href="${this.ciProjectUrl}/pipelines/${this.ciPipelineId}">#${this.ciPipelineId}</a>
+{{#if ciProjectUrl}}
+    <a href="{{ ciProjectUrl }}"><strong>{{ appName }}</strong></a>
+{{else}}
+    <strong>{{ appName }}</strong>
+{{/if}}
+
+{{#if jiraQuery}}
+    <a href="{{{ jiraUrl }}}"><em>{{#if appVersionLabel}}{{appVersionLabel}}{{else}}v{{ appVersion }}{{#if appRevision}}-{{ appRevision }}{{/if}}{{/if}}</em></a>
+{{else}}
+    <em>{{#if appVersionLabel}}{{appVersionLabel}}{{else}}v{{ appVersion }}{{#if appRevision}}-{{ appRevision }}{{/if}}{{/if}}</em>
+{{/if}}
+
+successfully deployed to
+
+{{#if ciEnvUrl}}
+    <a href="{{ ciEnvUrl }}"><strong>{{ ciEnvName }}</strong></a>
+{{else}}
+    <strong>{{ ciEnvName }}</strong>
+{{/if}}
+
+• <a href="{{ ciProjectUrl }}/pipelines/{{ ciPipelineId }}">#{{ ciPipelineId }}</a>
