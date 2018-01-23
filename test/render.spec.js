@@ -13,6 +13,7 @@ describe('[Unit] cli.js', () => {
 
   function runCmd(args) {
     gotStub.reset();
+    gotStub.resolves();
     cli(args);
     const actualMessage = gotStub.firstCall.args[1].body.message;
     const expectedResponse = {

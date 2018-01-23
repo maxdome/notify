@@ -19,15 +19,9 @@ module.exports = argv => {
     process.exit(1);
   }
 
-  function handleResult(text, code) {
-    code = code || 0;
-
+  function handleResult(text) {
     if (text) {
       msg(text);
-    }
-
-    if (code > 0) {
-      process.exit(code);
     }
   }
 
@@ -81,7 +75,7 @@ module.exports = argv => {
     .option('--hipChatToken [hipChatToken]', 'HipChat bearer token. Default: $HIPCHAT_AUTH_TOKEN')
     .option('--template [template]', 'Path to notification template literal')
     .option('--data [data]', 'Additional template data in JSON format')
-    .action(async options => {
+    .action(options => {
       const data = Object.assign(
         {
           jiraBaseUrl:
@@ -128,14 +122,14 @@ module.exports = argv => {
       };
 
       try {
-        await got.post(`https://api.hipchat.com/v2/room/${options.roomId || 'Public%20Deployments'}/notification`, {
-          json: true,
-          body,
-          headers,
-        });
-        if (process.env.NODE_ENV !== 'test') {
-          handleResult('Notification sent.');
-        }
+        got
+          .post(`https://api.hipchat.com/v2/room/${options.roomId || 'Public%20Deployments'}/notification`, {
+            json: true,
+            body,
+            headers,
+          })
+          .then(handleResult)
+          .catch(handleError);
       } catch (e) {
         handleError(e);
       }
