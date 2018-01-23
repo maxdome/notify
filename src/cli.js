@@ -21,7 +21,10 @@ module.exports = argv => {
     }
   }
 
-  function handleResult(text) {
+  function handleResult(text, verboseOnly = false) {
+    if (verboseOnly && !program.verbose) {
+      return;
+    }
     if (text) {
       msg(text);
     }
@@ -134,7 +137,9 @@ module.exports = argv => {
             body,
             headers,
           })
-          .then(handleResult)
+          .then(res => {
+            handleResult({ status: res.statusCode, message: res.statusMessage, body: res.body }, true);
+          })
           .catch(handleError);
       } catch (e) {
         handleError(e);
