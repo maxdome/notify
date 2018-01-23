@@ -16,7 +16,9 @@ module.exports = argv => {
   function handleError(err) {
     err = err instanceof Error ? err : new Error(err);
     console.error(program.verbose ? err : `Error: ${err.message}`);
-    process.exit(1);
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    }
   }
 
   function handleResult(text) {
@@ -42,7 +44,7 @@ module.exports = argv => {
   function checkRequiredOptions(options, data) {
     Object.values(options.options).forEach(option => {
       const name = option.long.slice(2);
-      if (option.required && !options.hasOwnProperty(name) && data[name] === 'unknown') {
+      if (option.required && !options.hasOwnProperty(name) && !data[name]) {
         handleError(`option '${option.flags}' missing`);
       }
     });
@@ -53,20 +55,20 @@ module.exports = argv => {
     .description('Send HipChat notification')
     .option('--appName <appName>', 'Application name. Default: $CI_PROJECT_NAME, $APPLICATION_NAME')
     .option('--appVersion <appVersion>', 'Application version. Default: $APPLICATION_VERSION')
-    .option('--appRevision <appRevision>', 'Application revision. Default: $APPLICATION_REVISION')
+    .option('--appRevision [appRevision]', 'Application revision. Default: $APPLICATION_REVISION')
     .option(
-      '--appVersionLabel <appVersionLabel>',
+      '--appVersionLabel [appVersionLabel]',
       'Application version label. Default: $APPLICATION_VERSION_LABEL, $ELASTIC_BEANSTALK_LABEL'
     )
     .option('--ciEnvName <ciEnvName>', 'CI environment name. Default: $CI_ENVIRONMENT_NAME')
-    .option('--ciEnvUrl <ciEnvUrl>', 'CI environment URL. Default: $CI_ENVIRONMENT_URL')
-    .option('--ciProjectUrl <ciProjectUrl>', 'CI project URL. Default: $CI_PROJECT_URL')
+    .option('--ciEnvUrl [ciEnvUrl]', 'CI environment URL. Default: $CI_ENVIRONMENT_URL')
+    .option('--ciProjectUrl [ciProjectUrl]', 'CI project URL. Default: $CI_PROJECT_URL')
     .option('--ciPipelineId <ciPipelineId>', 'CI pipeline ID. Default: $CI_PIPELINE_ID')
     .option(
-      '--jiraFixVersionOperator <jiraFixVersionOperator>',
+      '--jiraFixVersionOperator [jiraFixVersionOperator]',
       'JIRA fix version operator. Default: $JIRA_FIX_VERSION_OPERATOR'
     )
-    .option('--jiraQuery <jiraQuery>', 'JIRA query for project. Default: $JIRA_QUERY')
+    .option('--jiraQuery [jiraQuery]', 'JIRA query for project. Default: $JIRA_QUERY')
     .option('--jiraBaseUrl [jiraBaseUrl]', 'JIRA base URL. Default: $JIRA_BASE_URL')
     .option('--from [from]', 'Notification sender name. Default: "GitLab CI"')
     .option('--color [color]', 'Notification color [yellow|green|red|purple|gray|random]. Default: "purple"')

@@ -104,9 +104,9 @@ describe('[Unit] cli.js', () => {
     process.env.APPLICATION_REVISION = '1234567';
     process.env.JIRA_QUERY = 'bluescreen%3Dalways';
     process.env.CI_PROJECT_URL = 'http://github.com/windows/95';
-    process.env.CI_PIPELINE_ID = '666';
     process.env.CI_ENVIRONMENT_URL = 'http://windows95.com';
     process.env.CI_ENVIRONMENT_NAME = 'stage';
+    process.env.CI_PIPELINE_ID = '666';
     const message = runCmd(args);
     expect(message).to.contain('<a href="http://github.com/windows/95"><strong>Windows</strong></a>\n');
     expect(message).to.contain(
@@ -118,12 +118,18 @@ describe('[Unit] cli.js', () => {
   it('prefers --appVersionLabel over --appVersion and --appRevision', () => {
     const args = defaultArgs.concat(
       'hipchat',
+      '--appName',
+      'Windows',
       '--appVersion',
       '95',
       '--appRevision',
       '1234567',
       '--appVersionLabel',
-      'v95.0.0'
+      'v95.0.0',
+      '--ciEnvName',
+      'stage',
+      '--ciPipelineId',
+      '666'
     );
     const message = runCmd(args);
     expect(message).to.contain('<em>v95.0.0</em>\n');
@@ -134,18 +140,26 @@ describe('[Unit] cli.js', () => {
     process.env.APPLICATION_VERSION = '95';
     process.env.APPLICATION_REVISION = '1234567';
     process.env.APPLICATION_VERSION_LABEL = 'v95.0.0';
+    process.env.CI_ENVIRONMENT_NAME = 'stage';
+    process.env.CI_PIPELINE_ID = '666';
     const message = runCmd(args);
     expect(message).to.contain('<em>v95.0.0</em>\n');
   });
   it('accepts --jiraFixVersionOperator', () => {
     const args = defaultArgs.concat(
       'hipchat',
+      '--appName',
+      'Windows',
       '--appVersion',
       '95',
       '--jiraQuery',
       'bluescreen%3Dalways',
       '--jiraFixVersionOperator',
-      '%3E%3D'
+      '%3E%3D',
+      '--ciEnvName',
+      'stage',
+      '--ciPipelineId',
+      '666'
     );
     const message = runCmd(args);
     expect(message).to.contain(
@@ -160,7 +174,11 @@ describe('[Unit] cli.js', () => {
       '--appName',
       'Windows',
       '--appVersion',
-      'ME'
+      'ME',
+      '--ciEnvName',
+      'stage',
+      '--ciPipelineId',
+      '666'
     );
     const message = runCmd(args);
     expect(message).to.contain('<h1>Refusing to deploy Windows ME!</h1>');
@@ -175,7 +193,11 @@ describe('[Unit] cli.js', () => {
       '--appVersion',
       'ME',
       '--data',
-      '{"action": "install"}'
+      '{"action": "install"}',
+      '--ciEnvName',
+      'stage',
+      '--ciPipelineId',
+      '666'
     );
     const message = runCmd(args);
     expect(message).to.contain('<h1>Refusing to install Windows ME!</h1>');
