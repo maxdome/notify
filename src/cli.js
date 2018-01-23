@@ -42,12 +42,16 @@ module.exports = argv => {
   });
 
   function checkRequiredOptions(options, data) {
-    Object.values(options.options).forEach(option => {
+    for (let i in options.options) {
+      if (!options.options.hasOwnProperty(i)) {
+        continue;
+      }
+      const option = options.options[i];
       const name = option.long.slice(2);
       if (option.required && !options.hasOwnProperty(name) && !data[name]) {
         handleError(`option '${option.flags}' missing`);
       }
-    });
+    }
   }
 
   program
