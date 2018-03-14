@@ -4,8 +4,7 @@ const camelCase = require('lodash.camelcase');
 
 class Service {
   constructor(options = {}) {
-    this.options = options;
-    this.createTemplate();
+    this.options = Object.assign({}, options);
   }
 
   createTemplate() {

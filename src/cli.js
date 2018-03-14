@@ -10,6 +10,7 @@ module.exports = argv => {
     .description('Print notification to console')
     .action(options => {
       const test = new Service(options);
+      test.createTemplate();
       test.printNotification();
     });
 
@@ -28,6 +29,7 @@ module.exports = argv => {
     .option('--print', 'Print the template instead of sending it')
     .action(options => {
       const hipchat = new Hipchat(options);
+      hipchat.createTemplate();
 
       if (options.print) {
         hipchat.printNotification();
@@ -48,6 +50,7 @@ module.exports = argv => {
     .option('--print', 'Print the template instead of sending it')
     .action(options => {
       const slack = new Slack(options);
+      slack.createTemplate();
 
       if (options.print) {
         slack.printNotification();
