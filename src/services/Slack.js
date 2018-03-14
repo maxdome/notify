@@ -5,7 +5,6 @@ class Slack extends Service {
   sendNotification() {
     got
       .post(this.options.webhookUrl, {
-        json: true,
         body: this.renderedTemplate,
       })
       .catch(err => {

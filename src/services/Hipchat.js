@@ -5,7 +5,6 @@ class Hipchat extends Service {
   sendNotification() {
     got
       .post(`https://api.hipchat.com/v2/room/${this.options.room}/notification`, {
-        json: true,
         body: this.renderedTemplate,
         headers: {
           Authorization: `Bearer ${this.options.token}`,
