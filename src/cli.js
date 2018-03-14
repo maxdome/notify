@@ -48,7 +48,7 @@ module.exports = argv => {
     .option('--print', 'Print the template instead of sending it')
     .action(options => {
       const slack = new Slack(options);
-      
+
       if (options.print) {
         slack.printNotification();
       } else {

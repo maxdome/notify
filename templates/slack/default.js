@@ -6,12 +6,12 @@ module.exports = (data = {}) => {
     username: data.username || 'GitLab CI',
     attachments: [
       {
-        fallback: `${data.ciProjectName} (${version}) successfully deployed ${
-          data.ciEnvironmentName ? 'to ' + data.ciEnvironmentName + ' environment' : ''
-        }.`,
-        text: `:rocket: *<${data.ciProjectUrl}|${data.ciProjectName}>* successfully deployed (<${
-          data.ciProjectUrl
-        }/pipelines/${data.ciPipelineId}|#${data.ciPipelineId}>)`,
+        fallback: `${data.ciProjectName} (${version}) successfully ${
+          data.ciEnvironmentName ? 'deployed' : 'finished'
+        } ${data.ciEnvironmentName ? 'to ' + data.ciEnvironmentName + ' environment' : ''}.`,
+        text: `:rocket: *<${data.ciProjectUrl}|${data.ciProjectName}>* successfully ${
+          data.ciEnvironmentName ? 'deployed' : 'finished'
+        } (<${data.ciProjectUrl}/pipelines/${data.ciPipelineId}|#${data.ciPipelineId}>)`,
         fields: [
           {
             title: data.versionLabel ? 'Version' : 'Commit',
@@ -37,9 +37,7 @@ module.exports = (data = {}) => {
   if (data.ciEnvironmentName) {
     template.attachments[0].fields.push({
       title: 'Environment',
-      value: data.ciEnvironmentName
-        ? `<${data.ciEnvironmentUrl}|${data.ciEnvironmentName}>`
-        : data.ciEnvironmentName,
+      value: data.ciEnvironmentName ? `<${data.ciEnvironmentUrl}|${data.ciEnvironmentName}>` : data.ciEnvironmentName,
       short: true,
     });
   }

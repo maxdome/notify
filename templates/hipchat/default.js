@@ -10,8 +10,11 @@ module.exports = (data = {}) => {
     message: `
     <a href="${data.ciProjectUrl}}"><strong>${data.ciProjectName}</strong></a>
     ${data.changelogUrl ? `<a href="${data.changelogUrl}"><em>${version}</em></a>` : `<em>${version}</em>`}
-    deployed to
-    <a href="${data.ciEnvironmentUrl}"><strong>${data.ciEnvironmentName}</strong></a>
+    ${
+      data.ciEnvironmentName
+        ? `deployed to <a href="${data.ciEnvironmentUrl}"><strong>${data.ciEnvironmentName}</strong></a>`
+        : 'finished'
+    }
     • <a href="${data.ciProjectUrl}/pipelines/${data.ciPipelineId}">#${data.ciPipelineId}</a>
     `
       .replace(/\n/g, '')
