@@ -1,19 +1,19 @@
-const got = require('got');
+const fetch = require('node-fetch');
 const Service = require('./Service');
 
 class Hipchat extends Service {
   sendNotification() {
-    got
-      .post(`https://api.hipchat.com/v2/room/${this.options.room}/notification`, {
-        body: this.renderedTemplate,
-        headers: {
-          Authorization: `Bearer ${this.options.token}`,
-        },
-      })
-      .catch(err => {
-        console.error(err);
-        process.exit(1);
-      });
+    fetch(`https://api.hipchat.com/v2/room/${this.options.room}/notification`, {
+      method: 'POST',
+      body: JSON.stringify(this.renderedTemplate),
+      headers: {
+        Authorization: `Bearer ${this.options.token}`,
+        'Content-Type': 'application/json',
+      },
+    }).catch(err => {
+      console.error(err);
+      process.exit(1);
+    });
   }
 
   get serviceName() {

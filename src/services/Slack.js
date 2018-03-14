@@ -1,16 +1,18 @@
-const got = require('got');
+const fetch = require('node-fetch');
 const Service = require('./Service');
 
 class Slack extends Service {
   sendNotification() {
-    got
-      .post(this.options.webhookUrl, {
-        body: this.renderedTemplate,
-      })
-      .catch(err => {
-        console.error(err);
-        process.exit(1);
-      });
+    fetch(this.options.webhookUrl, {
+      method: 'POST',
+      body: JSON.stringify(this.renderedTemplate),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).catch(err => {
+      console.error(err);
+      process.exit(1);
+    });
   }
 
   get serviceName() {
