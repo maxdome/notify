@@ -1,15 +1,16 @@
 module.exports = (data = {}) => {
   const version =
     data.versionLabel || (data.ciCommitTag ? data.ciCommitTag + '-' : '') + data.ciCommitSha.substring(0, 7);
+  const name = data.applicationName || data.ciProjectName;
 
   const template = {
     username: data.username || 'GitLab CI',
     attachments: [
       {
-        fallback: `${data.ciProjectName} (${version}) successfully ${
-          data.ciEnvironmentName ? 'deployed' : 'finished'
-        } ${data.ciEnvironmentName ? 'to ' + data.ciEnvironmentName + ' environment' : ''}.`,
-        text: `:rocket: *<${data.ciProjectUrl}|${data.ciProjectName}>* successfully ${
+        fallback: `${name} (${version}) successfully ${data.ciEnvironmentName ? 'deployed' : 'finished'} ${
+          data.ciEnvironmentName ? 'to ' + data.ciEnvironmentName + ' environment' : ''
+        }.`,
+        text: `:rocket: *<${data.ciProjectUrl}|${name}>* successfully ${
           data.ciEnvironmentName ? 'deployed' : 'finished'
         } (<${data.ciProjectUrl}/pipelines/${data.ciPipelineId}|#${data.ciPipelineId}>)`,
         fields: [

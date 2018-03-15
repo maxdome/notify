@@ -8,7 +8,7 @@ module.exports = (data = {}) => {
     message_format: data.format || 'html',
     notify: !data.silent,
     message: `
-    <a href="${data.ciProjectUrl}}"><strong>${data.ciProjectName}</strong></a>
+    <a href="${data.ciProjectUrl}}"><strong>${data.applicationName || data.ciProjectName}</strong></a>
     ${data.changelogUrl ? `<a href="${data.changelogUrl}"><em>${version}</em></a>` : `<em>${version}</em>`}
     ${
       data.ciEnvironmentName
