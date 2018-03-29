@@ -14,7 +14,7 @@ class Slack extends Service {
     });
   }
 
-  get serviceName() {
+  get name() {
     return 'slack';
   }
 }

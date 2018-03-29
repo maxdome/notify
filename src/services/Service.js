@@ -7,15 +7,11 @@ class Service {
     this.options = Object.assign({}, options);
   }
 
-  createTemplate() {
-    this.templateData = this.getTemplateData();
-    this.renderedTemplate = this.renderTemplate(this.templateData);
-  }
-
-  renderTemplate(data) {
+  renderTemplate() {
+    const data = Object.assign({}, this.getCIEnvironmentVariables(), this.options);
     const templateName = this.options.template || 'default';
-    const template = require(path.resolve(__dirname, '../../templates', this.serviceName, templateName));
-    return template(data);
+    const template = require(path.resolve(__dirname, '../../templates', this.name, templateName));
+    this.renderedTemplate = template(data);
   }
 
   getCIEnvironmentVariables() {
@@ -24,17 +20,13 @@ class Service {
       .reduce((env, key) => ((env[camelCase(key)] = process.env[key]), env), {});
   }
 
-  getTemplateData() {
-    return Object.assign({}, this.getCIEnvironmentVariables(), this.options);
-  }
-
   printNotification() {
     console.info(JSON.stringify(this.renderedTemplate));
   }
 
   sendNotification() {}
 
-  get serviceName() {
+  get name() {
     return '';
   }
 }

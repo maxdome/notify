@@ -5,7 +5,8 @@
   "main": "src/cli.js",
   "scripts": {
     "fmt": "maxdome-prettier",
-    "test": "NODE_ENV=test mocha './test/**/*.spec.js'"
+    "test": "NODE_ENV=test mocha './test/**/*.spec.js'",
+    "test:coverage": "nyc npm test"
   },
   "bin": {
     "notify": "bin/notify"
@@ -36,7 +37,19 @@
     "chai": "^4.1.2",
     "mocha": "^4.1.0",
     "mock-require": "^2.0.2",
+    "nyc": "^11.6.0",
     "sinon": "^4.2.0",
     "sinon-chai": "^2.14.0"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "cache": true,
+    "all": true
   }
 }

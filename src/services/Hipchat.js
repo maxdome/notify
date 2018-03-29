@@ -15,7 +15,7 @@ class Hipchat extends Service {
     });
   }
 
-  get serviceName() {
+  get name() {
     return 'hipchat';
   }
 }

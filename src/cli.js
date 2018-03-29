@@ -11,7 +11,7 @@ module.exports = argv => {
     .option('--application-name [applicationName]', 'Name of the application. Default: $CI_PROJECT_NAME')
     .action(options => {
       const test = new Service(options);
-      test.createTemplate();
+      test.renderTemplate();
       test.printNotification();
     });
 
@@ -31,7 +31,7 @@ module.exports = argv => {
     .option('--print', 'Print the template instead of sending it')
     .action(options => {
       const hipchat = new Hipchat(options);
-      hipchat.createTemplate();
+      hipchat.renderTemplate();
 
       if (options.print) {
         hipchat.printNotification();
@@ -53,7 +53,7 @@ module.exports = argv => {
     .option('--print', 'Print the template instead of sending it')
     .action(options => {
       const slack = new Slack(options);
-      slack.createTemplate();
+      slack.renderTemplate();
 
       if (options.print) {
         slack.printNotification();
