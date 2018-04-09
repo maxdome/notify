@@ -43,7 +43,7 @@ module.exports = argv => {
   program
     .command('slack')
     .description('Send Slack notification')
-    .option('--webhook-url <webhookUrl>', 'Slack Webhohok URL for posting notifications')
+    .option('--webhook-url <webhookUrl>', 'Slack Webhook URL for posting notifications')
     .option('--application-name [applicationName]', 'Name of the application. Default: $CI_PROJECT_NAME')
     .option('--version-label [versionLabel]', 'Version which was deployed. Default: $CI_COMMIT_SHA')
     .option('--changelog-url [changelogUrl]', 'URL to changelog')

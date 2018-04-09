@@ -61,7 +61,7 @@ Send Slack notification
 
 Options:
 
-  --webhook-url <webhookUrl>      Slack Webhohok URL for posting notifications
+  --webhook-url <webhookUrl>      Slack Webhook URL for posting notifications
   --changelog-url [changelogUrl]  URL to changelog
   --version-label [versionLabel]  Version which was deployed
   --username [username]           Username to send notification from. Default: "GitLab CI"
