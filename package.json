@@ -49,7 +49,6 @@
       "text",
       "html"
     ],
-    "cache": true,
-    "all": true
+    "cache": true
   }
 }
