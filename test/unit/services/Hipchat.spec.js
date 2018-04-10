@@ -78,10 +78,10 @@ describe('Hipchat', () => {
       sandbox.stub(console, 'error');
       fetchMock.rejects(error);
       hipchat.sendNotification();
-      process.nextTick(() => {
+      setTimeout(() => {
         expect(console.error).to.have.been.called;
         done();
-      });
+      }, 0);
     });
 
     after(() => {

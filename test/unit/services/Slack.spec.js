@@ -99,10 +99,10 @@ describe('Slack', () => {
       sandbox.stub(console, 'error');
       fetchMock.rejects(error);
       slack.sendNotification();
-      process.nextTick(() => {
+      setTimeout(() => {
         expect(console.error).to.have.been.called;
         done();
-      });
+      }, 10);
     });
 
     after(() => {
