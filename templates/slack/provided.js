@@ -8,12 +8,12 @@ module.exports = (data = {}) => {
     username: data.username || 'GitLab CI',
     attachments: [
       {
-        fallback: `${name} (${version}) successfully ${data.ciEnvironmentName ? 'deployed' : 'finished'} ${
-          data.ciEnvironmentName ? 'to ' + data.ciEnvironmentName + ' environment' : ''
+        fallback: `${name} (${version}) successfully provided ${
+          data.ciEnvironmentName ? 'for ' + data.ciEnvironmentName + ' environment' : ''
         }.`,
-        text: `:rocket: *<${data.ciProjectUrl}|${name}>* successfully ${
-          data.ciEnvironmentName ? 'deployed' : 'finished'
-        } (<${data.ciProjectUrl}/pipelines/${data.ciPipelineId}|#${data.ciPipelineId}>)`,
+        text: `:package: *<${data.ciProjectUrl}|${name}>* successfully provided (<${data.ciProjectUrl}/pipelines/${
+          data.ciPipelineId
+        }|#${data.ciPipelineId}>)`,
         fields: [
           {
             title: data.versionLabel ? 'Version' : 'Commit',
@@ -21,7 +21,7 @@ module.exports = (data = {}) => {
             short: true,
           },
         ],
-        color: data.color || '#554488',
+        color: data.color || '#1077ad',
         mrkdwn_in: ['text'],
         actions: [],
       },

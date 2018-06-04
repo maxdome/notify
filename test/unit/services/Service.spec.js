@@ -61,7 +61,7 @@ describe('Service', () => {
     it('extracts and transforms environment variables starting with CI to camelcase', () => {
       const result = service.getCIEnvironmentVariables();
       expect(result).to.eql({
-        ciTestVariable: testVariable
+        ciTestVariable: testVariable,
       });
     });
 
